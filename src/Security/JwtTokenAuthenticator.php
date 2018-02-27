@@ -8,10 +8,10 @@
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
 
-namespace Lamsa\auth\Security;
+namespace Lamsa\JwtDecoder\Security;
 
-use Lamsa\Auth\Exception\UnverifiedTokenException;
-use Lamsa\Auth\User\User;
+use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
+use Lamsa\JwtDecoder\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
@@ -82,7 +82,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
      *
-     * @return User
+     * @return User1
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
@@ -111,7 +111,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 
         $this->logger->info("roles",[$roles]);
 
-        $identity = new User();
+        $identity = new User1();
         $identity->setRoles(['ROLE_USER']);
         $this->logger->info('role',$identity->getRoles());
         return $identity;

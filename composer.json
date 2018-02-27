@@ -1,5 +1,5 @@
 {
-    "name": "lamsa/jwt-auth-decoder",
+    "name": "lamsa/jwt-decoder",
     "description": "JWT encoder to be used for microservices",
     "authors": [
         {
