@@ -82,7 +82,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
      *
-     * @return User1
+     * @return User
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
@@ -111,7 +111,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 
         $this->logger->info("roles",[$roles]);
 
-        $identity = new User1();
+        $identity = new User();
         $identity->setRoles(['ROLE_USER']);
         $this->logger->info('role',$identity->getRoles());
         return $identity;
