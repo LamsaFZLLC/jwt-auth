@@ -1,6 +1,6 @@
 <?php
 
-namespace Lamsa\JwtDecoder\Exception;
+namespace Lamsa\Exception;
 
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;

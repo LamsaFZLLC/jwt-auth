@@ -8,10 +8,10 @@
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
 
-namespace Lamsa\JwtDecoder\Security;
+namespace Lamsa\Security;
 
-use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
-use Lamsa\JwtDecoder\User;
+use Lamsa\Exception\UnverifiedTokenException;
+use Lamsa\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;

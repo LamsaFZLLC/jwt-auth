@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
 
-namespace Lamsa\JwtDecoder\User;
+namespace Lamsa\Entity\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 

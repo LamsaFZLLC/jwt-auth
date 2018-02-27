@@ -11,6 +11,11 @@
         "php": ">=7.1",
         "symfony/symfony": "3.3.*",
         "lexik/jwt-authentication-bundle": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lamsa\\JwtDecoder\\": "src/"
+        }
     }
 
 }
