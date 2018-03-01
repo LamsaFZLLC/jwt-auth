@@ -143,6 +143,9 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
             case $exception instanceof UnverifiedTokenException:
                 $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
                 break;
+            case $exception instanceof MissingTokenException:
+                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                break;
         }
         return new JsonResponse($data, $exception->getStatusCode());
     }
