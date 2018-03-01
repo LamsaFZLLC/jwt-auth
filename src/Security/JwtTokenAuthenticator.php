@@ -10,18 +10,17 @@
 
 namespace Lamsa\JwtDecoder\Security;
 
-use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
+use AppBundle\Exception\ExpiredTokenException;
+use AppBundle\Exception\InvalidTokenException;
+use AppBundle\Exception\MissingTokenException;
 use Lamsa\JwtDecoder\Entity\User;
+use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -86,12 +85,10 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+        $data = [];
         try {
             $data = $this->encoder->decode($credentials);
         } catch (JWTDecodeFailureException $e) {
-            $this->logger->error("Exception message ",[$e->getMessage(),$e->getCode()]);
-            $this->logger->error("Exception reason ",[$e->getReason(),$e->getCode()]);
-
             switch (true){
                 case 'expired_token' === $e->getReason():
                     throw new ExpiredTokenException();
@@ -101,22 +98,17 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
                     throw new UnverifiedTokenException();
             }
         }
-        $this->logger->error("Token Data Here ",$data);
         $username = $data['username'];
 
         $roles = $data['roles'];
-        if($roles !== 'admin'){
-//            throw new UnauthorizedException();
-        }
 
-        $this->logger->info("roles",[$roles]);
+        $this->logger->info($username.' '."roles",[$roles]);
 
-        $identity = new User();
-        $identity->setRoles(['ROLE_USER']);
-        $this->logger->info('role',$identity->getRoles());
-        return $identity;
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+
+        return $user;
     }
-
 
     /**
      * @param mixed $credentials
@@ -137,14 +129,22 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        if($exception instanceof UsernameNotFoundException){
-            return;
-        }
-        $data = array(
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-        );
+        $data = [];
 
-        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
+        switch (true) {
+            case $exception instanceof UsernameNotFoundException:
+                return;
+            case $exception instanceof ExpiredTokenException:
+                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                break;
+            case $exception instanceof InvalidTokenException:
+                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                break;
+            case $exception instanceof UnverifiedTokenException:
+                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                break;
+        }
+        return new JsonResponse($data, $exception->getStatusCode());
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

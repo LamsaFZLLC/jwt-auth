@@ -1,26 +1,30 @@
 <?php
 /**
- * jwt-auth - UnverifiedTokenException.php
+ * content-service - MissingTokenException.php
  *
- * Date: 2/27/18
- * Time: 11:54 AM
+ * Date: 2/24/18
+ * Time: 7:10 PM
  * @author    Abdelhameed Alasbahi <abdkwa92@gmail.com>
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
-namespace Lamsa\JwtDecoder\Exception;
+
+namespace AppBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * Class UnverifiedTokenException
- * @package Lamsa\JwtDecoder\Exception
+ * Class MissingTokenException
+ * @package AppBundle\Exception
  */
-class UnverifiedTokenException extends AuthenticationException
+class MissingTokenException  extends AuthenticationException
 {
+    /**
+     * @return string
+     */
     public function getMessageKey()
     {
-        return 'unverified token';
+        return 'missing token';
     }
 
     /**
@@ -32,4 +36,5 @@ class UnverifiedTokenException extends AuthenticationException
     {
         return Response::HTTP_UNAUTHORIZED;
     }
+
 }

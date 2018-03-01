@@ -1,26 +1,30 @@
 <?php
 /**
- * jwt-auth - UnverifiedTokenException.php
+ * content-service - ExpiredTokenException.php
  *
- * Date: 2/27/18
- * Time: 11:54 AM
+ * Date: 2/24/18
+ * Time: 6:24 PM
  * @author    Abdelhameed Alasbahi <abdkwa92@gmail.com>
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
-namespace Lamsa\JwtDecoder\Exception;
+
+namespace AppBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * Class UnverifiedTokenException
- * @package Lamsa\JwtDecoder\Exception
+ * Class ExpiredTokenException
+ * @package AppBundle\Exception
  */
-class UnverifiedTokenException extends AuthenticationException
+class ExpiredTokenException extends AuthenticationException
 {
+    /**
+     * @return string
+     */
     public function getMessageKey()
     {
-        return 'unverified token';
+        return 'expired token';
     }
 
     /**
