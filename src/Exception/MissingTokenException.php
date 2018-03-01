@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
 
-namespace AppBundle\Exception;
+namespace Lamsa\JwtDecoder\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
