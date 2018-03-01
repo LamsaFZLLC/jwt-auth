@@ -10,10 +10,10 @@
 
 namespace Lamsa\JwtDecoder\Security;
 
-use AppBundle\Exception\ExpiredTokenException;
-use AppBundle\Exception\InvalidTokenException;
-use AppBundle\Exception\MissingTokenException;
 use Lamsa\JwtDecoder\Entity\User;
+use Lamsa\JwtDecoder\Exception\ExpiredTokenException;
+use Lamsa\JwtDecoder\Exception\InvalidTokenException;
+use Lamsa\JwtDecoder\Exception\MissingTokenException;
 use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
