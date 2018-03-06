@@ -102,7 +102,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
         $roles      = $data['roles'];
         $email      = $data['email'];
         $uuid       = $data['uuid'];
-        $this->logger->info('uuid    '.$uuid.'username'.$username.' '."roles  ".[$roles]. ' email '. $email);
+        $this->logger->info('uuid    '.$uuid.'username'.$username.' '."roles  ".$roles. ' email '. $email);
 
         $user = new User();
         $user->setRoles(['ROLE_USER']);
