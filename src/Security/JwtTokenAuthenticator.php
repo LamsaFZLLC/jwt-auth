@@ -98,16 +98,14 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
                     throw new UnverifiedTokenException();
             }
         }
-        $username   = $data['username'];
         $roles      = $data['roles'];
-        $email      = $data['email'];
         $uuid       = $data['uuid'];
-        $this->logger->info('uuid    '.$uuid.'username'.$username.' '."roles  ".$roles. ' email '. $email);
+        $this->logger->info('uuid: '.$uuid.' '."roles: ".json_encode($roles));
 
         $user = new User();
-        $user->setRoles(['ROLE_USER']);
-        $user->setEmail($email);
+        $user->setRoles($roles);
         $user->setUuid($uuid);
+
         return $user;
     }
 
