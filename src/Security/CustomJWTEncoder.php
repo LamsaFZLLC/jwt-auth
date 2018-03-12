@@ -60,7 +60,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
             if (null !== $this->ttl) {
                 $data['exp'] = time() + $this->ttl;
             }
-            return \Firebase\JWT\JWT::encode($data, $this->passPhrase,self::ALGORITHM);
+            return JWT::encode($data, $this->passPhrase,self::ALGORITHM);
         }
         catch (\Exception $e) {
             $this->logger->info('exception '.$e->getMessage());
@@ -74,7 +74,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
     public function decode($token)
     {
         try {
-            $payload =  (array) \Firebase\JWT\JWT::decode($token, $this->passPhrase);
+            $payload =  (array) JWT::decode($token, $this->passPhrase);
             $this->checkIssuedAt($payload);
             $this->checkExpiration($payload);
         } catch (\Exception $e) {
