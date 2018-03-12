@@ -17,6 +17,9 @@
         "psr-4": {
             "Lamsa\\JwtDecoder\\": "src/"
         }
-    }
+
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 
 }
