@@ -63,7 +63,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $isLoginOrSignupSubmit = ($request->getPathInfo() == '/users/login' || $request->getPathInfo() == '/users/signup') && $request->isMethod('POST');
+        $isLoginOrSignupSubmit = ($request->getPathInfo() == '/users/session' || $request->getPathInfo() == '/users/signup') && $request->isMethod('POST');
         if($isLoginOrSignupSubmit){
             return null;
         }

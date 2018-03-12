@@ -10,7 +10,8 @@
     "require": {
         "php": ">=7.1",
         "symfony/symfony": "3.3.*",
-        "lexik/jwt-authentication-bundle": "^2.4"
+        "lexik/jwt-authentication-bundle": "^2.4",
+        "nixilla/php-jwt": "dev-master"
     },
     "autoload": {
         "psr-4": {
