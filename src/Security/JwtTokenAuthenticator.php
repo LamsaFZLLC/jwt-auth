@@ -90,11 +90,11 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
             $data = $this->encoder->decode($credentials);
         } catch (JWTDecodeFailureException $e) {
             switch (true){
-                case 'expired_token' === $e->getReason():
+                case JWTDecodeFailureException::EXPIRED_TOKEN    === $e->getReason():
                     throw new ExpiredTokenException();
-                case 'invalid_token' === $e->getReason():
+                case JWTDecodeFailureException::INVALID_TOKEN    === $e->getReason():
                     throw new InvalidTokenException();
-                case 'unverified_token' === $e->getReason():
+                case JWTDecodeFailureException::UNVERIFIED_TOKEN === $e->getReason():
                     throw new UnverifiedTokenException();
             }
         }
