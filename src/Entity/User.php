@@ -22,7 +22,7 @@ class User implements UserInterface
     /**
      * @var string
      */
-    private $uuid;
+    private $userId;
 
     /**
      * @var string
@@ -53,17 +53,17 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getUuid(): string
+    public function getUserId(): string
     {
-        return $this->uuid;
+        return $this->userId;
     }
 
     /**
-     * @param string $uuid
+     * @param string $userId
      */
-    public function setUuid(string $uuid)
+    public function setUserId(string $userId): void
     {
-        $this->uuid = $uuid;
+        $this->userId = $userId;
     }
 
     /**

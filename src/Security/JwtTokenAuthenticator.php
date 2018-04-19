@@ -63,11 +63,6 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $isLoginOrSignupSubmit = ($request->getPathInfo() == '/users/session' || $request->getPathInfo() == '/users/signup') && $request->isMethod('POST');
-        if($isLoginOrSignupSubmit){
-            return null;
-        }
-
         $extractor = new AuthorizationHeaderTokenExtractor('Bearer','Authorization');
         $token = $extractor->extract($request);
 
@@ -98,13 +93,10 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
                     throw new UnverifiedTokenException();
             }
         }
-        $roles      = $data['roles'];
-        $uuid       = $data['uuid'];
-        $this->logger->info('uuid: '.$uuid.' '."roles: ".json_encode($roles));
+        $userId = $data['user_id'];
 
         $user = new User();
-        $user->setRoles($roles);
-        $user->setUuid($uuid);
+        $user->setUserId($userId);
 
         return $user;
     }
