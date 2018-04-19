@@ -32,7 +32,7 @@ class User implements UserInterface
     /**
      * @var array
      */
-    private $roles ;
+    private $roles = [];
 
     /**
      * @return string
