@@ -15,12 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     /**
-     * @var string
-     */
-    private $customerId;
-
-    /**
-     * @var string
+     * @var int
      */
     private $userId;
 
@@ -35,33 +30,17 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @return string
+     * @return int
      */
-    public function getCustomerId(): string
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param string $customerId
-     */
-    public function setCustomerId(string $customerId)
-    {
-        $this->customerId = $customerId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId(): string
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      */
-    public function setUserId(string $userId): void
+    public function setUserId(int $userId): void
     {
         $this->userId = $userId;
     }

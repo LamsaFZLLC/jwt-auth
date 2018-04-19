@@ -12,7 +12,6 @@ use JWT\Authentication\JWT;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class CustomJWTEncoder
@@ -29,11 +28,6 @@ class CustomJWTEncoder implements JWTEncoderInterface
     private $ttl;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var string
      */
     protected $passPhrase;
@@ -41,12 +35,10 @@ class CustomJWTEncoder implements JWTEncoderInterface
     /**
      * @param string $passPhrase
      * @param $ttl
-     * @param LoggerInterface $logger
      */
-    public function __construct($passPhrase,$ttl,LoggerInterface $logger)
+    public function __construct($passPhrase,$ttl)
     {
         $this->passPhrase = $passPhrase;
-        $this->logger = $logger;
         $this->ttl = $ttl;
     }
 
@@ -60,10 +52,9 @@ class CustomJWTEncoder implements JWTEncoderInterface
             if (null !== $this->ttl) {
                 $data['exp'] = time() + $this->ttl;
             }
-            return JWT::encode($data, $this->passPhrase,self::ALGORITHM);
+            return array($data['exp'],JWT::encode($data, $this->passPhrase,self::ALGORITHM));
         }
         catch (\Exception $e) {
-            $this->logger->info('exception '.$e->getMessage());
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token.', $e);
         }
     }
@@ -78,7 +69,6 @@ class CustomJWTEncoder implements JWTEncoderInterface
             $this->checkIssuedAt($payload);
             $this->checkExpiration($payload);
         } catch (\Exception $e) {
-            $this->logger->info('exception  '.$e->getMessage());
 
             switch (true){
                 case 'Expired JWT Token' === $e->getMessage():
