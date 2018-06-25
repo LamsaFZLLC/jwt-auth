@@ -48,9 +48,10 @@ class CustomJWTEncoder implements JWTEncoderInterface
     public function encode(array $data)
     {
         try {
-            $data['iat'] = time();
+            $iat = strtotime(date('d-m-Y'));
+            $data['iat'] = $iat;
             if (null !== $this->ttl) {
-                $data['exp'] = time() + $this->ttl;
+                $data['exp'] = $iat + $this->ttl;
             }
             return array($data['exp'],JWT::encode($data, $this->passPhrase,self::ALGORITHM));
         }
