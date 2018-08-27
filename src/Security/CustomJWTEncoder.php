@@ -63,14 +63,15 @@ class CustomJWTEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token)
+    public function decode($token,$checkExpiry = true)
     {
         try {
             $payload =  (array) JWT::decode($token, $this->passPhrase);
             $this->checkIssuedAt($payload);
-            $this->checkExpiration($payload);
+            if($checkExpiry) {
+                $this->checkExpiration($payload);
+            }
         } catch (\Exception $e) {
-
             switch (true){
                 case 'Expired JWT Token' === $e->getMessage():
                     throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired Token', $e);
