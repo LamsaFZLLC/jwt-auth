@@ -15,10 +15,8 @@ use Lamsa\JwtDecoder\Exception\ExpiredTokenException;
 use Lamsa\JwtDecoder\Exception\InvalidTokenException;
 use Lamsa\JwtDecoder\Exception\MissingTokenException;
 use Lamsa\JwtDecoder\Exception\UnverifiedTokenException;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -35,16 +33,16 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var JWTEncoderInterface
+     * @var CustomJWTEncoder
      */
     private $encoder;
 
     /**
      * JwtTokenAuthenticator constructor.
      *
-     * @param JWTEncoderInterface $encoder
+     * @param CustomJWTEncoder $encoder
      */
-    public function __construct(JWTEncoderInterface $encoder)
+    public function __construct(CustomJWTEncoder $encoder)
     {
         $this->encoder = $encoder;
     }
