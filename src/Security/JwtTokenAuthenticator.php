@@ -19,18 +19,19 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 /**
  * Class JwtTokenAuthenticator
  * @package AppBundle\Security
  */
-class JwtTokenAuthenticator extends AbstractGuardAuthenticator
+class JwtTokenAuthenticator extends AbstractAuthenticator
 {
     /**
      * @var CustomJWTEncoder
@@ -54,31 +55,31 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $extractor = new AuthorizationHeaderTokenExtractor('Bearer','Authorization');
-        $token = $extractor->extract($request);
+        $extractor = new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization');
+        $token     = $extractor->extract($request);
 
-        if(!$token){
+        if (!$token) {
             throw new MissingTokenException();
         }
+
         return $token;
     }
 
     /**
      * @param mixed $credentials
-     * @param UserProviderInterface $userProvider
      *
      * @return User
      */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials)
     {
         $data = [];
         try {
             $data = $this->encoder->decode($credentials);
         } catch (JWTDecodeFailureException $e) {
-            switch (true){
-                case JWTDecodeFailureException::EXPIRED_TOKEN    === $e->getReason():
+            switch (true) {
+                case JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason():
                     throw new ExpiredTokenException();
-                case JWTDecodeFailureException::INVALID_TOKEN    === $e->getReason():
+                case JWTDecodeFailureException::INVALID_TOKEN === $e->getReason():
                     throw new InvalidTokenException();
                 case JWTDecodeFailureException::UNVERIFIED_TOKEN === $e->getReason():
                     throw new UnverifiedTokenException();
@@ -95,69 +96,69 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param mixed $credentials
-     * @param UserInterface $user
-     *
-     * @return bool
-     */
-    public function checkCredentials($credentials, UserInterface $user)
-    {
-        return true;
-    }
-
-    /**
-     * @param Request $request
+     * @param Request                 $request
      * @param AuthenticationException $exception
      *
-     * @return JsonResponse
+     * @return Response|null
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $data = [];
-
         switch (true) {
-            case $exception instanceof UsernameNotFoundException:
-                return;
             case $exception instanceof ExpiredTokenException:
-                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                $data = array('code' => $exception->getStatusCode(), 'message' => $exception->getMessageKey());
                 break;
             case $exception instanceof InvalidTokenException:
-                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                $data = array('code' => $exception->getStatusCode(), 'message' => $exception->getMessageKey());
                 break;
             case $exception instanceof UnverifiedTokenException:
-                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                $data = array('code' => $exception->getStatusCode(), 'message' => $exception->getMessageKey());
                 break;
             case $exception instanceof MissingTokenException:
-                $data = array('code' => $exception->getStatusCode(),'message' => $exception->getMessageKey());
+                $data = array('code' => $exception->getStatusCode(), 'message' => $exception->getMessageKey());
                 break;
+            default:
+                $data = array('code' => 401, 'message' => $exception->getMessage());
         }
-        return new JsonResponse($data, $exception->getStatusCode());
-    }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-    {
+        return new JsonResponse($data, $data['code']);
     }
 
     /**
-     * @return bool
+     * @param Request        $request
+     * @param TokenInterface $token
+     * @param string         $firewallName
+     *
+     * @return Response|null
      */
-    public function supportsRememberMe()
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return false;
+        return null;
     }
 
     /**
      * @param Request $request
-     * @param AuthenticationException|null $authException
      *
-     * @return JsonResponse
+     * @return PassportInterface
      */
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function authenticate(Request $request): PassportInterface
     {
-        $message = $authException ? $authException->getMessageKey() : 'missing creds';
-        return new JsonResponse([
-            'error' =>$message],
-            401);
+        $apiToken = $this->getCredentials($request);
+        if (null === $apiToken || false === $apiToken) {
+            throw new MissingTokenException();
+        }
 
+        return new SelfValidatingPassport(new UserBadge($apiToken, function($userIdentifier) {
+            return $this->getUser($userIdentifier);
+        }));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool|null
+     */
+    public function supports(Request $request): ?bool
+    {
+        return true;
     }
 }
