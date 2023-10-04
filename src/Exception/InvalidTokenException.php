@@ -23,7 +23,7 @@ class InvalidTokenException extends AuthenticationException
     /**
      * @return string
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'Invalid token';
     }
@@ -33,7 +33,7 @@ class InvalidTokenException extends AuthenticationException
      *
      * @return int An HTTP response status code
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return Response::HTTP_UNAUTHORIZED;
     }

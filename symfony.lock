@@ -180,8 +180,5 @@
     },
     "symfony/var-dumper": {
         "version": "v5.3.8"
-    },
-    "symfony/var-exporter": {
-        "version": "v5.3.8"
     }
 }

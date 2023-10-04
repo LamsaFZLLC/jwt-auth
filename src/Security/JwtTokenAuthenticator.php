@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 /**
@@ -51,7 +51,7 @@ class JwtTokenAuthenticator extends AbstractAuthenticator
     /**
      * @param Request $request
      *
-     * @return bool|false|null|string|\string[]
+     * @return bool|false|null|string|string[]
      */
     public function getCredentials(Request $request)
     {
@@ -70,7 +70,7 @@ class JwtTokenAuthenticator extends AbstractAuthenticator
      *
      * @return User
      */
-    public function getUser($credentials)
+    public function getUser($credentials): User
     {
         $data = [];
         try {
@@ -138,9 +138,9 @@ class JwtTokenAuthenticator extends AbstractAuthenticator
     /**
      * @param Request $request
      *
-     * @return PassportInterface
+     * @return Passport
      */
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $apiToken = $this->getCredentials($request);
         if (null === $apiToken || false === $apiToken) {

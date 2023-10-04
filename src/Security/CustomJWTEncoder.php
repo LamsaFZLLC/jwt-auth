@@ -8,6 +8,8 @@
  * @copyright Copyright (c) 2017 LamsaWorld (http://www.lamsaworld.com/)
  */
 namespace Lamsa\JwtDecoder\Security;
+use DateTime;
+use Exception;
 use JWT\Authentication\JWT;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
@@ -36,7 +38,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
      * @param string $passPhrase
      * @param $ttl
      */
-    public function __construct($passPhrase,$ttl)
+    public function __construct(string $passPhrase, $ttl)
     {
         $this->passPhrase = $passPhrase;
         $this->ttl = $ttl;
@@ -55,7 +57,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
             }
             return array($data['exp'],JWT::encode($data, $this->passPhrase,self::ALGORITHM));
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token.', $e);
         }
     }
@@ -63,7 +65,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token,$checkExpiry = true)
+    public function decode($token,$checkExpiry = true): array
     {
         try {
             $payload =  (array) JWT::decode($token, $this->passPhrase);
@@ -71,7 +73,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
             if($checkExpiry) {
                 $this->checkExpiration($payload);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             switch (true){
                 case 'Expired JWT Token' === $e->getMessage():
                     throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired Token', $e);
@@ -95,7 +97,7 @@ class CustomJWTEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token');
         }
 
-        if (0 <= (new \DateTime())->format('U') - $payload['exp']) {
+        if (0 <= (new DateTime())->format('U') - $payload['exp']) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token');
         }
     }

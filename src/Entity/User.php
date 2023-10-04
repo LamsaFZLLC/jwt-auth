@@ -20,22 +20,9 @@ class User implements UserInterface
     private $userId;
 
     /**
-     * @var string
-     */
-    private $email;
-
-    /**
      * @var array
      */
     private $roles = [];
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
 
     /**
      * @param int $userId
@@ -45,27 +32,11 @@ class User implements UserInterface
         $this->userId = $userId;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
-
 
     /**
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         // TODO: Implement getRoles() method.
         return $this->roles;
@@ -85,7 +56,7 @@ class User implements UserInterface
      * This should be the encoded password. On authentication, a plain-text
      * password will be salted, encoded, and then compared to this value.
      *
-     * @return string The password
+     * @return void The password
      */
     public function getPassword()
     {
@@ -97,7 +68,7 @@ class User implements UserInterface
      *
      * This can return null if the password was not encoded using a salt.
      *
-     * @return string|null The salt
+     * @return void The salt
      */
     public function getSalt()
     {
@@ -107,7 +78,7 @@ class User implements UserInterface
     /**
      * Returns the username used to authenticate the user.
      *
-     * @return string The username
+     * @return void The username
      */
     public function getUsername()
     {
@@ -126,9 +97,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return int|string
+     * @return int
      */
-    public function getUserIdentifier()
+    public function getUserIdentifier(): int
     {
         return $this->userId;
     }

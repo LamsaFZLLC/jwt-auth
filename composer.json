@@ -11,30 +11,34 @@
         "psr-4": {
             "Lamsa\\JwtDecoder\\": "src/"
         }
-
     },
     "require": {
         "php": ">=7.1",
         "lexik/jwt-authentication-bundle": "^2.4",
         "nixilla/php-jwt": "dev-master",
-        "symfony/flex": "^1.16"
+        "symfony/flex": "^1.17|^2"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": true,
+            "symfony/flex": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
     },
     "conflict": {
         "symfony/symfony": "*"
     },
     "extra": {
         "symfony": {
-            "id": "01C1TW989CK77ZA7B2H4HC9WAG",
-            "allow-contrib": true,
-            "require": "5.3.*"
+            "allow-contrib": false,
+            "require": "5.4.*"
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        }
-    }
+    "prefer-stable": true
 }
