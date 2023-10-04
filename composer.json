@@ -15,7 +15,7 @@
     "require": {
         "php": ">=7.1",
         "lexik/jwt-authentication-bundle": "^2.4",
-        "nixilla/php-jwt": "dev-master",
+        "nixilla/php-jwt": "^0.1.1",
         "symfony/flex": "^1.17|^2"
     },
     "config": {

@@ -17,9 +17,6 @@
     "namshi/jose": {
         "version": "7.2.3"
     },
-    "nixilla/php-jwt": {
-        "version": "dev-master"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },
